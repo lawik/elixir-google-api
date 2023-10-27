@@ -21,10 +21,11 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
           :name => String.t(),
           :typed_map => String.t(),
           :struct => String.t(),
+          :is_list => boolean(),
           :typespec => String.t()
         }
 
-  defstruct [:name, :typed_map, :struct, :typespec]
+  defstruct [:name, :typed_map, :struct, :is_list, :typespec]
 
   alias GoogleApis.Generator.ElixirGenerator.ResourceContext
   alias GoogleApi.Discovery.V1.Model.JsonSchema
@@ -71,6 +72,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
     %__MODULE__{
       name: name,
       typed_map: typed_map,
+      is_list: true,
       typespec: "list(#{t.typespec})"
     }
   end
@@ -90,6 +92,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
     %__MODULE__{
       name: "array",
       typed_map: typed_map,
+      is_list: true,
       typespec: "list(#{t.typespec})"
     }
   end
@@ -109,6 +112,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
       %__MODULE__{
         name: "array",
         typed_map: type_typed_map,
+        is_list: true,
         typespec: "list(#{type_spec})"
       }
     end

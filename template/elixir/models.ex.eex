@@ -33,31 +33,44 @@ defmodule <%= namespace %>.Models do
     <%= for property <- model.properties do %>
     *   `<%= property.name %>` (*type:* `<%= property.type.typespec %>`, *default:* `<%= GoogleApis.Generator.ElixirGenerator.Model.value_string(property.default) %>`) - <%= render_description(property.description, indent_subsequent: 6) %><% end %>
     """
-    @keys [<%= model.properties |> Enum.map(fn p -> ":#{p.name}" end) |> Enum.join(",") %>]
     def <%= Macro.underscore(model.name) %>, do: <%= Macro.underscore(model.name) %>([])
     def <%= Macro.underscore(model.name) %>(kv) do
-        inputs =
-            kv
-            |> Enum.reduce(%{}, fn {key, value}, acc ->
-                key = 
-                    case key do
-                        key when is_binary(key) ->
-                            String.to_existing_atom(key)
-                        key when is_atom(key) ->
-                            key
-                    end
-
-                if key in @keys do
-                    Map.put(acc, key, value)
-                else
-                    raise "Bad key #{inspect(key)} in <%= model.name %>."
+        IO.inspect(kv)
+        %{
+        <%= for property <- model.properties do %>
+            <% if model.name == "ListeSpacesResponse" do IO.inspect(property) end %>
+            :"<%= property.name %>" => 
+                <%= if property.type.typed_map do
+                        if property.type.is_list do
+                            "& Enum.map(&1, fn v -> #{property.type.typed_map}(v) end)"
+                        else
+                            "& #{property.type.typed_map}/1"
+                        end
+                else "nil" end %>,
+        <% end %>
+        }
+        |> Enum.map(fn {key, mapper} ->
+            value =
+                case kv[key] do
+                    nil ->
+                        case kv[to_string(key)] do
+                            nil ->
+                                # No value for neither string nor atom key
+                                nil
+                            val ->
+                                val
+                        end
+                    val ->
+                        val
                 end
-            end)
-
-        @keys
-        |> Enum.map(fn key -> {key, nil} end)
+                            
+            if mapper do
+                {key, mapper.(value)}
+            else
+                {key, value}
+            end
+        end)
         |> Map.new()
-        |> Map.merge(inputs)
     end
 
 <% end %>
