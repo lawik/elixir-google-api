@@ -40,6 +40,7 @@ defmodule GoogleApis.Generator.ElixirGenerator do
     case Token.build(api_config) do
       nil ->
         IO.puts("Unable to read spec file #{ApiConfig.google_spec_file(api_config)}")
+
       token ->
         if updated_discovery_revision?(token) do
           token
@@ -62,11 +63,13 @@ defmodule GoogleApis.Generator.ElixirGenerator do
           |> write_test_helper_exs
         end
     end
+
     :ok
   end
 
   defp updated_discovery_revision?(token) do
     path = Path.join(token.base_dir, "metadata.ex")
+
     with {:ok, old_metadata} <- File.read(path),
          [_, old_revision] <- Regex.run(~r/@discovery_revision "(\d{8})"/, old_metadata) do
       new_revision = token.rest_description.revision
@@ -94,25 +97,28 @@ defmodule GoogleApis.Generator.ElixirGenerator do
   defp set_model_filenames(token) do
     {models, _} =
       token.models
-      |> Enum.map_reduce(MapSet.new(), fn(model, used) ->
+      |> Enum.map_reduce(MapSet.new(), fn model, used ->
         {file, used} = find_unused_filename(Model.filename(model), used, 0)
         {%Model{model | filename: file}, used}
       end)
+
     %Token{token | models: models}
   end
 
   defp set_api_filenames(token) do
     {apis, _} =
       token.apis
-      |> Enum.map_reduce(MapSet.new(), fn(api, used) ->
+      |> Enum.map_reduce(MapSet.new(), fn api, used ->
         {file, used} = find_unused_filename(Api.filename(api), used, 0)
         {%Api{api | filename: file}, used}
       end)
+
     %Token{token | apis: apis}
   end
 
   defp find_unused_filename(name, used, num) do
     candidate = filename_candidate(name, num)
+
     if MapSet.member?(used, candidate) do
       find_unused_filename(name, used, num + 1)
     else
@@ -129,6 +135,7 @@ defmodule GoogleApis.Generator.ElixirGenerator do
 
   defp update_model_properties(token) do
     context = ResourceContext.with_models_by_name(token.resource_context, token.models_by_name)
+
     Map.update!(token, :models, fn models ->
       models
       |> Enum.map(fn model ->
@@ -274,7 +281,9 @@ defmodule GoogleApis.Generator.ElixirGenerator do
 
   defp api_title_for(%{title: title}) when is_binary(title), do: title
 
-  defp docs_link_for(%{documentationLink: "/admin-sdk/" <> _ = link}), do: "https://developers.google.com#{link}"
+  defp docs_link_for(%{documentationLink: "/admin-sdk/" <> _ = link}),
+    do: "https://developers.google.com#{link}"
+
   defp docs_link_for(%{documentationLink: ""}), do: "https://cloud.google.com/"
   defp docs_link_for(%{documentationLink: link}) when is_binary(link), do: link
   defp docs_link_for(_), do: "https://cloud.google.com/"
@@ -292,16 +301,18 @@ defmodule GoogleApis.Generator.ElixirGenerator do
   end
 
   defp write_model_files(%{models: models, namespace: namespace, base_dir: base_dir} = token) do
-    models
-    |> Enum.each(fn model ->
-      path = Path.join([base_dir, "model", model.filename])
-      IO.puts("Writing #{model.name} to #{path}.")
+    path = Path.join([base_dir, "models.ex"])
+    File.write!(path, Renderer.models(models, namespace))
+    # models
+    # |> Enum.each(fn model ->
+    #   path = Path.join([base_dir, "model", model.filename])
+    #   IO.puts("Writing #{model.name} to #{path}.")
 
-      File.write!(
-        path,
-        Renderer.model(model, namespace)
-      )
-    end)
+    #   File.write!(
+    #     path,
+    #     Renderer.model(model, namespace)
+    #   )
+    # end)
 
     token
   end
@@ -365,7 +376,7 @@ defmodule GoogleApis.Generator.ElixirGenerator do
           end)
       }
     end)
-    |> Enum.sort_by(&(&1.name))
+    |> Enum.sort_by(& &1.name)
   end
 
   defp collect_methods(%{resources: resources, methods: methods}) do
@@ -390,6 +401,6 @@ defmodule GoogleApis.Generator.ElixirGenerator do
   def all_models(rest_description) do
     rest_description.schemas
     |> Model.from_schemas()
-    |> Enum.sort_by(&(&1.name))
+    |> Enum.sort_by(& &1.name)
   end
 end

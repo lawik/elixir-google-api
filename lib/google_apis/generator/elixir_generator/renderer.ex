@@ -19,6 +19,11 @@ defmodule GoogleApis.Generator.ElixirGenerator.Renderer do
 
   require EEx
 
+  EEx.function_from_file(:def, :models, Path.expand("./template/elixir/models.ex.eex"), [
+    :models,
+    :namespace
+  ])
+
   EEx.function_from_file(:def, :model, Path.expand("./template/elixir/model.ex.eex"), [
     :model,
     :namespace

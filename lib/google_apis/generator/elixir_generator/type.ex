@@ -19,11 +19,12 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
 
   @type t :: %__MODULE__{
           :name => String.t(),
+          :typed_map => String.t(),
           :struct => String.t(),
           :typespec => String.t()
         }
 
-  defstruct [:name, :struct, :typespec]
+  defstruct [:name, :typed_map, :struct, :typespec]
 
   alias GoogleApis.Generator.ElixirGenerator.ResourceContext
   alias GoogleApi.Discovery.V1.Model.JsonSchema
@@ -52,7 +53,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
 
     %__MODULE__{
       name: "map",
-      struct: ResourceContext.struct_name(context, ref),
+      typed_map: ResourceContext.typed_map_name(context, ref),
       typespec: "%{optional(String.t) => #{typespec}}"
     }
   end
@@ -60,16 +61,16 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
   def from_schema(%{type: "array", items: items}, context) do
     t = from_schema(items, context)
 
-    {struct, name} =
+    {typed_map, name} =
       case t.name do
         "arrayarray" -> {nil, "arrayarray"}
-        "array" -> {t.struct, "arrayarray"}
-        _ -> {t.struct, "array"}
+        "array" -> {t.typed_map, "arrayarray"}
+        _ -> {t.typed_map, "array"}
       end
 
     %__MODULE__{
       name: name,
-      struct: struct,
+      typed_map: typed_map,
       typespec: "list(#{t.typespec})"
     }
   end
@@ -80,33 +81,34 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
       |> Map.put(:repeated, nil)
       |> from_schema(context)
 
-    struct =
+    typed_map =
       case t.name do
         "array" -> nil
-        _ -> t.struct
+        _ -> t.typed_map
       end
 
     %__MODULE__{
       name: "array",
-      struct: struct,
+      typed_map: typed_map,
       typespec: "list(#{t.typespec})"
     }
   end
 
   def from_schema(%{"$ref": ref}, context) when not is_nil(ref) do
     model = Map.get(context.models_by_name, ref)
-    type_struct = ResourceContext.struct_name(context, ref)
+    type_typed_map = ResourceContext.typed_map_name(context, ref)
     type_spec = ResourceContext.typespec(context, ref)
+
     if model == nil || !model.is_array do
       %__MODULE__{
         name: "object",
-        struct: type_struct,
+        typed_map: type_typed_map,
         typespec: type_spec
       }
     else
       %__MODULE__{
         name: "array",
-        struct: type_struct,
+        typed_map: type_typed_map,
         typespec: "list(#{type_spec})"
       }
     end
@@ -174,7 +176,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.Type do
   def from_schema(%{type: "object"}, context) do
     %__MODULE__{
       name: "object",
-      struct: ResourceContext.struct_name(context),
+      typed_map: ResourceContext.typed_map_name(context),
       typespec: ResourceContext.typespec(context)
     }
   end

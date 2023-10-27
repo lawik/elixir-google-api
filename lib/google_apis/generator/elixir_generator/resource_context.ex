@@ -23,17 +23,17 @@ defmodule GoogleApis.Generator.ElixirGenerator.ResourceContext do
   defstruct namespace: "Default Namespace", property: nil, base_path: "", models_by_name: %{}
 
   @doc """
-  Return the default struct name for this context.
+  Return the default typed map name for this context.
   """
-  @spec struct_name(t) :: String.t()
-  def struct_name(context), do: struct_name(context, default_name(context))
+  @spec typed_map_name(t) :: String.t()
+  def typed_map_name(context), do: typed_map_name(context, default_name(context))
 
   @doc """
   Return the struct name for this context with a specific model name
   """
-  @spec struct_name(t, String.t()) :: String.t()
-  def struct_name(context, name) do
-    "#{context.namespace}.Model.#{Macro.camelize(name)}"
+  @spec typed_map_name(t, String.t()) :: String.t()
+  def typed_map_name(context, name) do
+    "#{context.namespace}.Models.#{Macro.underscore(name)}"
   end
 
   @doc """
@@ -47,7 +47,7 @@ defmodule GoogleApis.Generator.ElixirGenerator.ResourceContext do
   """
   @spec typespec(t, String.t()) :: String.t()
   def typespec(context, name) do
-    "#{context.namespace}.Model.#{Macro.camelize(name)}.t"
+    "#{context.namespace}.Models.#{Macro.underscore(name)}()"
   end
 
   defp default_name(%{property: nil}), do: "Unknown"
