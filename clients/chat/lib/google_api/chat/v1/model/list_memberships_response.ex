@@ -22,7 +22,7 @@ defmodule GoogleApi.Chat.V1.Model.ListMembershipsResponse do
   ## Attributes
 
   *   `memberships` (*type:* `list(GoogleApi.Chat.V1.Model.Membership.t)`, *default:* `nil`) - List of memberships in the requested (or first) page.
-  *   `nextPageToken` (*type:* `String.t`, *default:* `nil`) - A token that can be sent as `pageToken` to retrieve the next page of results. If empty, there are no subsequent pages.
+  *   `nextPageToken` (*type:* `String.t`, *default:* `nil`) - A token that you can send as `pageToken` to retrieve the next page of results. If empty, there are no subsequent pages.
   """
 
   use GoogleApi.Gax.ModelBase

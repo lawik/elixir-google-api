@@ -21,7 +21,7 @@ defmodule GoogleApi.Chat.V1.Model.GoogleAppsCardV1SuggestionItem do
 
   ## Attributes
 
-  *   `text` (*type:* `String.t`, *default:* `nil`) - The value of a suggested input to a text input field. This is equivalent to what users would enter themselves.
+  *   `text` (*type:* `String.t`, *default:* `nil`) - The value of a suggested input to a text input field. This is equivalent to what users enter themselves.
   """
 
   use GoogleApi.Gax.ModelBase

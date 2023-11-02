@@ -17,11 +17,11 @@
 
 defmodule GoogleApi.Chat.V1.Model.GoogleAppsCardV1CardHeader do
   @moduledoc """
-  Represents a card header.
+  Represents a card header. For an example in Google Chat apps, see [Card header](https://developers.google.com/chat/ui/widgets/card-header).
 
   ## Attributes
 
-  *   `imageAltText` (*type:* `String.t`, *default:* `nil`) - The alternative text of this image which is used for accessibility.
+  *   `imageAltText` (*type:* `String.t`, *default:* `nil`) - The alternative text of this image that's used for accessibility.
   *   `imageType` (*type:* `String.t`, *default:* `nil`) - The shape used to crop the image.
   *   `imageUrl` (*type:* `String.t`, *default:* `nil`) - The HTTPS URL of the image in the card header.
   *   `subtitle` (*type:* `String.t`, *default:* `nil`) - The subtitle of the card header. If specified, appears on its own line below the `title`.

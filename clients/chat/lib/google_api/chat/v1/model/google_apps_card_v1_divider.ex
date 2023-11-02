@@ -17,7 +17,7 @@
 
 defmodule GoogleApi.Chat.V1.Model.GoogleAppsCardV1Divider do
   @moduledoc """
-  Displays a divider between widgets, a horizontal line. For example, the following JSON creates a divider: ``` "divider": { } ```
+  Displays a divider between widgets as a horizontal line. For an example in Google Chat apps, see [Divider](https://developers.google.com/chat/ui/widgets/divider). For example, the following JSON creates a divider: ``` "divider": {} ```
 
   ## Attributes
 

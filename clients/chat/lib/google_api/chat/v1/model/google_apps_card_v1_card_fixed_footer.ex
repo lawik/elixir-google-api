@@ -17,12 +17,12 @@
 
 defmodule GoogleApi.Chat.V1.Model.GoogleAppsCardV1CardFixedFooter do
   @moduledoc """
-  A persistent (sticky) footer that that appears at the bottom of the card. Setting `fixedFooter` without specifying a `primaryButton` or a `secondaryButton` causes an error. Chat apps support `fixedFooter` in [dialogs](https://developers.google.com/chat/how-tos/dialogs), but not in [card messages](https://developers.google.com/chat/api/guides/message-formats/cards).
+  A persistent (sticky) footer that that appears at the bottom of the card. For an example in Google Chat apps, see [Card footer](https://developers.google.com/chat/ui/widgets/card-fixed-footer). Setting `fixedFooter` without specifying a `primaryButton` or a `secondaryButton` causes an error. Supported by Google Workspace Add-ons and Chat apps. For Chat apps, you can use fixed footers in [dialogs](https://developers.google.com/chat/how-tos/dialogs), but not [card messages](https://developers.google.com/chat/api/guides/v1/messages/create#create).
 
   ## Attributes
 
   *   `primaryButton` (*type:* `GoogleApi.Chat.V1.Model.GoogleAppsCardV1Button.t`, *default:* `nil`) - The primary button of the fixed footer. The button must be a text button with text and color set.
-  *   `secondaryButton` (*type:* `GoogleApi.Chat.V1.Model.GoogleAppsCardV1Button.t`, *default:* `nil`) - The secondary button of the fixed footer. The button must be a text button with text and color set. `primaryButton` must be set if `secondaryButton` is set.
+  *   `secondaryButton` (*type:* `GoogleApi.Chat.V1.Model.GoogleAppsCardV1Button.t`, *default:* `nil`) - The secondary button of the fixed footer. The button must be a text button with text and color set. If `secondaryButton` is set, you must also set `primaryButton`.
   """
 
   use GoogleApi.Gax.ModelBase

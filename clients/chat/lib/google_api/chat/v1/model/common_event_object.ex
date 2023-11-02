@@ -26,8 +26,8 @@ defmodule GoogleApi.Chat.V1.Model.CommonEventObject do
   *   `invokedFunction` (*type:* `String.t`, *default:* `nil`) - Name of the invoked function associated with the widget. Only set for Chat apps.
   *   `parameters` (*type:* `map()`, *default:* `nil`) - Custom [parameters](/chat/api/reference/rest/v1/cards#ActionParameter) passed to the invoked function. Both keys and values must be strings.
   *   `platform` (*type:* `String.t`, *default:* `nil`) - The platform enum which indicates the platform where the event originates (`WEB`, `IOS`, or `ANDROID`). Not supported by Chat apps.
-  *   `timeZone` (*type:* `GoogleApi.Chat.V1.Model.TimeZone.t`, *default:* `nil`) - The timezone ID and offset from Coordinated Universal Time (UTC).
-  *   `userLocale` (*type:* `String.t`, *default:* `nil`) - The full `locale.displayName` in the format of [ISO 639 language code]-[ISO 3166 country/region code] such as "en-US". Not supported by Chat apps.
+  *   `timeZone` (*type:* `GoogleApi.Chat.V1.Model.TimeZone.t`, *default:* `nil`) - The timezone ID and offset from Coordinated Universal Time (UTC). Only supported for the event types [`CARD_CLICKED`](https://developers.google.com/chat/api/reference/rest/v1/EventType#ENUM_VALUES.CARD_CLICKED) and [`SUBMIT_DIALOG`](https://developers.google.com/chat/api/reference/rest/v1/DialogEventType#ENUM_VALUES.SUBMIT_DIALOG).
+  *   `userLocale` (*type:* `String.t`, *default:* `nil`) - The full `locale.displayName` in the format of [ISO 639 language code]-[ISO 3166 country/region code] such as "en-US".
   """
 
   use GoogleApi.Gax.ModelBase
